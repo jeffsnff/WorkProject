@@ -6,6 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpClient<BookService>(client =>
+{
+  client.BaseAddress = new Uri("https://simple-books-api.click");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

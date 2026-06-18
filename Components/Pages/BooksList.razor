@@ -1,0 +1,29 @@
+@page "/books"
+@inject BookService BookService
+<PageTitle>Book List</PageTitle>
+<h1>The Books</h1>
+
+@if(books == null)
+{
+  <p>Loading...</p>
+}
+else
+{
+  <ul>
+    @foreach(var book in books)
+    {
+      <li>
+        @book.Title
+      </li>
+    }
+  </ul>
+}
+
+@code{
+  private List<BookSummary>? books;
+
+  protected override async Task OnInitializedAsync()
+  {
+    books = await BookService.GetBookAsync();
+  }
+}
