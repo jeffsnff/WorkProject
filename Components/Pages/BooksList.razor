@@ -9,14 +9,23 @@
 }
 else
 {
-  <ul>
-    @foreach(var book in books)
-    {
-      <li>
-        @book.Title
-      </li>
-    }
-  </ul>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Book</th>
+      <th>Type</th>
+      <th>Available</th>
+    </tr>
+      @foreach (var book in books)
+      {
+        <tr>
+          <td>@book.Id</td>
+          <td>@book.Title</td>
+          <td>@book.Type</td>
+          <td>@book.Available</td>
+        </tr>
+      }
+  </table>
 }
 
 @code{
