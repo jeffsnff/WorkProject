@@ -1,5 +1,9 @@
 @page "/books"
+@rendermode InteractiveServer
 @inject BookService BookService
+
+
+
 <PageTitle>Book List</PageTitle>
 <h1>The Books</h1>
 
@@ -9,6 +13,10 @@
 }
 else
 {
+  <label>Search Books</label>
+  <input type="text" placeholder="Search by title" @bind="searchText" />
+  <button @onclick="OnSearchClicked">Search</button>
+  <p>@message</p>
   <table>
     <tr>
       <th>ID</th>
@@ -16,7 +24,7 @@ else
       <th>Type</th>
       <th>Available</th>
     </tr>
-      @foreach (var book in books)
+      @foreach (var book in filteredBooks)
       {
         <tr>
           <td>@book.Id</td>
@@ -30,9 +38,24 @@ else
 
 @code{
   private List<BookSummary>? books;
+  private List<BookSummary> filteredBooks;
+  private string message = "Not clicked";
+  private string searchText { get; set; } = string.Empty;
 
   protected override async Task OnInitializedAsync()
   {
     books = await BookService.GetBookAsync();
+    filteredBooks = books.ToList();
+  }
+
+  public void OnSearchClicked(){
+
+    if(string.IsNullOrWhiteSpace(searchText))
+    {
+      filteredBooks = books.ToList();
+    }else
+    {
+      filteredBooks = books.Where(book => book.Title.ToLower().Contains(searchText.ToLower())).ToList();
+    }
   }
 }
