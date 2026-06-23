@@ -26,7 +26,7 @@ else
     </tr>
       @foreach (var book in filteredBooks)
       {
-        <tr>
+        <tr @onclick="() => SelectBook(book.Id)">
           <td>@book.Id</td>
           <td>@book.Title</td>
           <td>@book.Type</td>
@@ -39,15 +39,15 @@ else
 @code{
   private List<BookSummary>? books;
   private List<BookSummary> filteredBooks;
-  private string message = "Not clicked";
+  private BookDetails book;
+  private string message = "Record Not Clicked";
   private string searchText { get; set; } = string.Empty;
 
   protected override async Task OnInitializedAsync()
   {
-    books = await BookService.GetBookAsync();
+    books = await BookService.GetBooksAsync();
     filteredBooks = books.ToList();
   }
-
   public void OnSearchClicked(){
 
     if(string.IsNullOrWhiteSpace(searchText))
@@ -57,5 +57,12 @@ else
     {
       filteredBooks = books.Where(book => book.Title.ToLower().Contains(searchText.ToLower())).ToList();
     }
+  }
+
+  public async Task SelectBook(int id)
+  {
+    book = await BookService.GetBookAsync(id);
+    Console.WriteLine($"{book.Id} - {book.Author} - {book.Title}");
+    message = $"Record {id} Clicked!";
   }
 }
