@@ -1,4 +1,7 @@
 @page "/books"
+
+@using EarthSoft_Project.Components.Modal
+
 @rendermode InteractiveServer
 @inject BookService BookService
 
@@ -34,12 +37,14 @@ else
         </tr>
       }
   </table>
+  <Modal IsVisible=showModal OnClose=Close book=book/>
 }
 
 @code{
   private List<BookSummary>? books;
   private List<BookSummary> filteredBooks;
   private BookDetails book;
+  private bool showModal;
   private string message = "Record Not Clicked";
   private string searchText { get; set; } = string.Empty;
 
@@ -59,10 +64,14 @@ else
     }
   }
 
+  public async Task Close(){
+    showModal = false;
+  }
   public async Task SelectBook(int id)
   {
     book = await BookService.GetBookAsync(id);
     Console.WriteLine($"{book.Id} - {book.Author} - {book.Title}");
     message = $"Record {id} Clicked!";
+    showModal = true;
   }
 }
