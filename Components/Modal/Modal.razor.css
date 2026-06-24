@@ -1,0 +1,62 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.modal-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  min-width: 500px;
+}
+
+.book-detail {
+  display: grid;
+  grid-template-columns: 30px 120px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+img[src*=dollarSignIcon] {
+  background-color: rgb(31, 233, 31);
+  border-radius: 100%;
+}
+
+img[src*="available.svg"] {
+  background-color: rgb(31, 233, 31);
+}
+
+img[src*="notAvailable.svg"] {
+  background-color: rgb(243, 40, 40);
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+button {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}

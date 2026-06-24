@@ -1,0 +1,74 @@
+@using System.ComponentModel.DataAnnotations
+
+@if(IsVisible)
+{
+  <div class="modal-overlay">
+    <div class="modal-container" @onclick:stopPropagation>
+      <h2>Book Details</h2>
+      <hr />
+      <div class="book-detail">
+        <img src="imgs/favourite-book.svg" alt="Favorite book icon" />
+        <strong>Title: </strong>
+        @book.Title
+      </div>
+      <hr />
+      <div class="book-detail">
+        <img src="imgs/authorIcon.svg" alt="Author icon" />
+        <strong>Author: </strong>
+        @book.Author
+      </div>
+      <hr />
+      <div class="book-detail">
+        <img src="imgs/bookIcon.svg" />
+        <strong>Type: </strong>
+        @book.Type
+      </div>
+      <hr />
+      <div class="book-detail">
+        <img src="imgs/barcodeIcon.svg" alt="Barcode icon" />
+        <strong>ISBN: </strong>
+        @book.ISBN
+      </div>
+      <hr />
+        @if(book.Available)
+        {
+          <div class="book-detail">
+            <img src="imgs/available.svg" alt="Book is available" />
+            <strong>Availbility: </strong>
+            Available
+          </div>
+        }else
+        {
+          <div class="book-detail">
+            <img src="imgs/notAvailable.svg" alt="Book is not available" />
+            <strong>Availbility: </strong>
+            Not Available
+          </div>
+        }
+      <hr />
+      <div class="book-detail">
+        <img src="imgs/dollarSignIcon.svg" />
+        <strong>Price: </strong>
+        @book.Price
+      </div>
+      <hr />
+      <button @onclick="Close">Close</button>
+    </div>
+  </div>
+}
+
+@code{
+
+  [Parameter] public string Title { get; set; } = string.Empty;
+  [Parameter] public bool IsVisible { get; set; }
+  [Parameter] public EventCallback OnClose { get; set; }
+  [Required] [Parameter] public BookDetails book { get; set; }
+
+  private async Task Close()
+  {
+    if(OnClose.HasDelegate)
+    {
+      await OnClose.InvokeAsync();
+    }
+  }
+}

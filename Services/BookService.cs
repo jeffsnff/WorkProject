@@ -8,12 +8,24 @@ public class BookService
     _httpClient = httpClient;
   }
 
-  // API request to get book summary data
-  public async Task<List<BookSummary>> GetBookAsync()
+  /// <summary>
+  /// Request to /books to get all /books
+  /// </summary>
+  /// <returns>List<BookSummary></returns>
+  public async Task<List<BookSummary>> GetBooksAsync()
   {
     var bookSummaries = await _httpClient.GetFromJsonAsync<List<BookSummary>>("books");
-
-    // Check is bookSummaries is null if it is, return an empty list
+    // If bookSummaries is null send empty BookSummary list
     return bookSummaries ?? new List<BookSummary>();
+  }
+/// <summary>
+/// Gets details of a single book from /books/{id}
+/// </summary>
+/// <param name="id"></param>
+/// <returns>BookDetail object</returns>
+  public async Task<BookDetails> GetBookAsync(int id)
+  {
+    var bookDetails = await _httpClient.GetFromJsonAsync<BookDetails>($"books/{id}");
+    return bookDetails ?? new BookDetails();
   }
 }
