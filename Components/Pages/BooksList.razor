@@ -5,29 +5,32 @@
 @rendermode InteractiveServer
 @inject BookService BookService
 
-
-
 <PageTitle>Book List</PageTitle>
 <h1>The Books</h1>
 
-@if(books == null)
+@if(_books == null)
 {
   <p>Loading...</p>
 }
 else
 {
   <label>Search Books</label>
-  <input type="text" placeholder="Search by title" @bind="searchText" />
+  <input type="text" placeholder="Search by title" @bind="SearchText" />
   <button @onclick="OnSearchClicked">Search</button>
-  <p>@message</p>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Book</th>
-      <th>Type</th>
-      <th>Available</th>
-    </tr>
-      @foreach (var book in filteredBooks)
+  @if (_noSearchResults)
+  {
+    <p>Sorry, No Books were returned when searching on "@SearchText"</p>
+  }
+  else
+  {
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Book</th>
+        <th>Type</th>
+        <th>Available</th>
+      </tr>
+      @foreach (var book in _filteredBooks)
       {
         <tr @onclick="() => SelectBook(book.Id)">
           <td>@book.Id</td>
@@ -36,42 +39,48 @@ else
           <td>@book.Available</td>
         </tr>
       }
-  </table>
-  <Modal IsVisible=showModal OnClose=Close book=book/>
+    </table>
+  }
+  <Modal IsVisible=_showModal OnClose=Close book=_book/>
 }
 
 @code{
-  private List<BookSummary>? books;
-  private List<BookSummary> filteredBooks;
-  private BookDetails book;
-  private bool showModal;
-  private string message = "Record Not Clicked";
-  private string searchText { get; set; } = string.Empty;
+  private List<BookSummary>? _books;
+  private List<BookSummary> _filteredBooks = new ();
+  private BookDetails _book = new ();
+  private bool _showModal;
+  private string SearchText { get; set; } = string.Empty;
+  private bool _noSearchResults = false;
 
   protected override async Task OnInitializedAsync()
   {
-    books = await BookService.GetBooksAsync();
-    filteredBooks = books.ToList();
+    _books = await BookService.GetBooksAsync();
+    _filteredBooks = _books.ToList();
   }
   public void OnSearchClicked(){
-
-    if(string.IsNullOrWhiteSpace(searchText))
+    
+    if(string.IsNullOrWhiteSpace(SearchText))
     {
-      filteredBooks = books.ToList();
+      _filteredBooks = _books.ToList();
+      _noSearchResults = false;
     }else
     {
-      filteredBooks = books.Where(book => book.Title.ToLower().Contains(searchText.ToLower())).ToList();
+      _filteredBooks = _books.Where(book => book.Title.ToLower().Contains(SearchText.ToLower())).ToList();
+      _noSearchResults = false;
+    }
+    if(!_filteredBooks.Any())
+    {
+      _noSearchResults = true;
     }
   }
-
+  
   public async Task Close(){
-    showModal = false;
+    _showModal = false;
   }
-  public async Task SelectBook(int id)
+  
+  private async Task SelectBook(int id)
   {
-    book = await BookService.GetBookAsync(id);
-    Console.WriteLine($"{book.Id} - {book.Author} - {book.Title}");
-    message = $"Record {id} Clicked!";
-    showModal = true;
+    _book = await BookService.GetBookAsync(id);
+    _showModal = true;
   }
 }
